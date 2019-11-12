@@ -158,8 +158,6 @@ var options = {
         { title: "Artist", datafield: "artist" },
         { title: "Bpm", datafield: "bpm" },        
         { title: "Path", datafield: "path", visible: false },
-        { title: "PlaylistID", datafield: "playlistid", visible: false },
-        { title: "FavoriteID", datafield: "favoriteid", visible: false },
         { 
             title: "Actions", 
             datafield: "actions", 
