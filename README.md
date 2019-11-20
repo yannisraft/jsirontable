@@ -1,6 +1,13 @@
 # JSIronTable
 JS IronTable - A responsive Jquery Table for multiple purposes
 
+This table provides a responsive JQuery table which includes:
+- Column Sorting
+- Fixed header
+- Dynamic data
+- Custom column view
+- Column Rearrange
+
 An example of use is described on the example.js file
 
 ```javascript
@@ -14,7 +21,7 @@ var options = {
     sortable: true,
     columns: [
         { title: "ID", datafield: "id", visible: false, width: "10%" },        
-        { title: "Title", datafield: "title", width: "100px", datafields: [{key: "data-translate", value: "{{lang.main.title}}"}] },
+        { title: "Title", datafield: "title", width: "100px",datafields: [{key: "data-translate", value: "{{lang.main.title}}"}] },
         { title: "Is New", datafield: "isnew", width: "50%" },
         { title: "Duration", datafield: "duration" },
         { title: "Artist", datafield: "artist" },
@@ -40,3 +47,5 @@ var options = {
 $('.jsirontable').JSIronTable(options);
 
 ```
+
+More updates and fixes coming soon..
