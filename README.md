@@ -1,4 +1,4 @@
-# ![alt text](https://lh4.googleusercontent.com/HXFVlNiGmrCZcWWeXgJ-o73hVpvgQEwlLDgTvJ6HrZKrMpDJGoEHCr8kEGNeWa50VHV-FpwKkGP7kkvmQbUO=w1920-h888 "JS Iron Table") JSIronTable
+# JSIronTable
 JS IronTable - A responsive Jquery Table for multiple purposes
 
 This table provides a responsive JQuery table which includes:
