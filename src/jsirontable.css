@@ -30,7 +30,7 @@
 	border: 1px solid #999999;
 	position: relative;
     padding: 3px 22px 3px 10px;
-    min-height: 20px;
+    min-height: 1.0em;
     word-break: break-word;
     flex-flow:column nowrap;
     flex: 1; /* Must be none with defined cell width for each one */
@@ -38,9 +38,8 @@
 
 .jsit_cell span, .jsit_head span {	
     overflow: hidden;
-    max-height: 1.1em;
+    max-height: 1.35em;
     display: block;
-    /*margin-right: 30px;*/
 }
 .jsit_cell span:after, .jsit_head span:after {	
     position: absolute;
@@ -54,7 +53,8 @@
 }
 
 .jsit_heading {
-	background-color: #EEE;
+    background-color: rgb(63, 100, 168);
+    color: #fff;
 	flex: none;
     display: flex; 
 }
@@ -151,7 +151,7 @@
     top: 3px;
     right: 5px;
     font-size: 20px;
-    color: #828282;   
+    color: #fff;   
 }
 
 /*

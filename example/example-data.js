@@ -1,0 +1,233 @@
+var songs = [
+    {
+		id: "s1",
+        artist:"Radiohead",
+        title:"Bloom",
+        isnew: 0,
+        duration:180,
+        bpm:15,   
+        test: "40",
+        path: "http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
+    },
+    {
+		id: "s2",
+        artist:"Radiohead",
+        title:"Paranoid Android",
+        isnew: 0,
+        duration:200,
+        bpm:165,   
+        test: "10",
+        path: "http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
+    },
+    {
+		id: "s3",
+        artist:"Radiohead",
+        title:"Let Down",
+        isnew: 1,
+        duration:190,
+        bpm:160,   
+        test: "300",
+        path: "http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
+    },
+    {
+		id: "s4",
+        artist:"Radiohead",
+        title:"Separator",
+        isnew: 1,
+        duration:210,
+        bpm:145,   
+        test: "100",
+        path: "http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
+    },
+    {
+		id: "s5",
+        artist:"AC/DC",
+        title:"For Those About To Rock",
+        isnew: 0,
+        duration:200,
+        bpm:123,   
+        test: "50",
+        path:"http://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_5MG.wav",
+        actions:""
+    },
+    {
+		id: "s6",
+        artist:"AC/DC",
+        title:"Back In Black",
+        isnew: 0,
+        duration:220,
+        bpm:95,   
+        test: "60",
+        path:"http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
+    },
+    {
+		id: "s6",
+        artist:"AC/DC",
+        title:"Big Gun",
+        isnew: 0,
+        duration:230,
+        bpm:90,   
+        test: "11",
+        path:"http://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_5MG.wav",
+        actions:""
+    },
+    {
+		id: "s7",
+        artist:"Alice Cooper",
+        title:"School's Out",
+        isnew: 0,
+        duration:240,
+        bpm:70,   
+        test: "120",
+        path:"http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
+    },
+    {
+		id: "s8",
+        artist:"Audioslave",
+        title:"Like a Stone",
+        isnew: 1,
+        duration:270,
+        bpm:80,   
+        test: "40",
+        path:"http://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_5MG.wav",
+        actions:""
+    },
+    {
+		id: "s9",
+        artist:"Bad Company",
+        title:"Burnin' Sky",
+        isnew: 0,
+        duration:260,
+        bpm:35,   
+        test: "30",
+        path:"http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
+    },
+    {
+		id: "s10",
+        artist:"Billy Idol",
+        title:"White Wedding",
+        isnew: 0,
+        duration:250,
+        bpm:111,   
+        test: "90",
+        path:"http://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_5MG.wav",
+        actions:""
+    },
+    {
+		id: "s11",
+        artist:"Billy Idol",
+        title:"Rebel Yell",
+        isnew: 1,
+        duration:280,
+        bpm:110,   
+        test: "111",
+        path:"http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
+    },
+    {
+		id: "s12",
+        artist:"Black Sabbath",
+		title:"Iron Man",
+        isnew: 0,
+        duration:290,
+        bpm:100,    
+        test: "30",       
+        path:"http://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_5MG.wav",
+        actions:""
+    },
+    {
+		id: "s13",
+        artist:"Black Sabbath",
+        title:"Neon Knights",
+        isnew: 0,
+        duration:300,
+        bpm:65,   
+        test: "30",     
+        path:"http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
+    },
+    {
+		id: "s14",
+        artist:"Black Sabbath",
+        title:"N.i.b.",
+        isnew: 0,
+        duration:280,
+        bpm:110,   
+        test: "111",
+        path:"http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
+    },
+    {
+		id: "s15",
+        artist:"Black Sabbath",
+		title:"Heaven and Hell",
+        isnew: 1,
+        duration:290,
+        bpm:100,    
+        test: "30",       
+        path:"http://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_5MG.wav",
+        actions:""
+    },
+    {
+		id: "s16",
+        artist:"Black Sabbath",
+        title:"Sweet Leaf",
+        isnew: 1,
+        duration:300,
+        bpm:65,   
+        test: "30",     
+        path:"http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
+    },
+    {
+		id: "s17",
+        artist:"Bruce Springsteen",
+        title:"Glory Days",
+        isnew: 0,
+        duration:280,
+        bpm:110,   
+        test: "111",
+        path:"http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
+    },
+    {
+		id: "s18",
+        artist:"Bruce Springsteen",
+		title:"Dancing In the Dark",
+        isnew: 1,
+        duration:290,
+        bpm:100,    
+        test: "30",       
+        path:"http://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_5MG.wav",
+        actions:""
+    },
+    {
+		id: "s19",
+        artist:"Bryan Adams",
+        title:"Somebody",
+        isnew: 1,
+        duration:300,
+        bpm:65,   
+        test: "30",     
+        path:"http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
+    },
+    {
+		id: "s20",
+        artist:"Bryan Adams",
+        title:"Summer Of '69",
+        isnew: 0,
+        duration:300,
+        bpm:65,   
+        test: "30",     
+        path:"http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
+    }
+];

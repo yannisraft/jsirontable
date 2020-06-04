@@ -1,5 +1,5 @@
 /*
-* JSIronTable - Copyright 2019 Raftopoulos Yannis
+* JSIronTable - Copyright 2020 Raftopoulos Yannis
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,17 +19,18 @@
     var pluginName = "JSIronTable",
         dataKey = "plugin_" + pluginName;
 
-    var Plugin = function (element, options) {
+    var JSIronTable = function (element, options) {
     
         this.element = element;
         
         this.options = {
             data: [],
             fitHeight: false,
-            ordering: true,
             fixedheader: true,
             scrollable: true,
             sortable: true,
+            headerfontsize: "12pt",
+            cellfontsize: "12pt",
             columns: [],
             rows: [],
             headercells: [],
@@ -39,7 +40,7 @@
         this.init(options);
     };
 
-    Plugin.prototype = {
+    JSIronTable.prototype = {
         init: function (options) {
             $.extend(this.options, options);
             
@@ -72,8 +73,6 @@
                         
                         if(self._generateheader && self.Validate(options.columns))
                         {
-                            //console.log("JSIronTable Log: Found existing header.. deleting!");
-                            //console.log("self.element.find('.jsit_heading).length: "+$(self.element).find('.jsit_heading').length);
                             if($(self.element).find('.jsit_heading').length !== 0)
                             {
                                 $(self.element).find('.jsit_heading').remove();                                
@@ -92,9 +91,11 @@
                         }
         
                         // Create Header
+                        //
                         self.CreateHeader();
         
                         // Create Data
+                        //
                         self.CreateData();
         
                         self.initialHeight = self.element.height();
@@ -126,26 +127,31 @@
 
         OnInitialized(callback)
         {
+            if(this.options.debug) console.log("JSIronTable -> OnInitialized()");
             this.listeners.OnInitialized = callback;
         },
 
         OnError(callback)
         {
+            if(this.options.debug) console.log("JSIronTable -> OnError()");
             this.listeners.OnError = callback;
         },
 
         OnSort(callback)
         {
+            if(this.options.debug) console.log("JSIronTable -> OnSort()");
             this.listeners.OnSort = callback;
         },
 
         BeforeSort(callback)
         {
+            if(this.options.debug) console.log("JSIronTable -> BeforeSort()");
             this.listeners.BeforeSort = callback;
         },
 
         OnReload(callback)
         {
+            if(this.options.debug) console.log("JSIronTable -> OnReload()");
             this.listeners.OnReload = callback;
         },
 
@@ -324,15 +330,24 @@
                         }
                     }
                     
-                    var span =  $('<span'+sortableclass+datefields_str+'>'+cellvalue+'</span><i class="material-icons jsit_ordericon">swap_vert</i>');
-                    // Add On click listener to the header
-                    //
-                    $(span).click(function(e) {
-                        var targ = e.target.id;
-                        var lastChar = targ.charAt(targ.length - 1);
-                        e.preventDefault();
-                        self.SortTableByColumn(lastChar, this.parentElement);
-                    });                    
+                    
+                    //var span =  $('<span'+sortableclass+datefields_str+'>'+cellvalue+'</span>');
+                    var span =  $('<span'+sortableclass+datefields_str+' style="font-size: '+this.options.headerfontsize+';">'+cellvalue+'</span>');
+
+                    // Sort Icon
+                    if(this.options.sortable)
+                    {
+                        $(span).html($(span).html() + '<i class="material-icons jsit_ordericon">swap_vert</i>');
+
+                        // Add On click listener to the header for sorting
+                        //
+                        $(span).click(function(e) {
+                            var targ = e.target.id;
+                            var lastChar = targ.charAt(targ.length - 1);
+                            e.preventDefault();
+                            self.SortTableByColumn(lastChar, this.parentElement);
+                        });
+                    }                                        
                     
                     var cell = $('<div id="hd_'+column.key+'" class="jsit_head'+hiddenclass+' jsit_noselect"'+addstyle+'></div>');
                     $(cell).html(span);
@@ -433,7 +448,7 @@
                                         cellvalue = this.options.columns[g].view(this.options.data[k], row_element);                                
                                     }
 
-                                    var cell = $('<div class="jsit_cell'+hiddenclass+'"'+addstyle+'><span>'+cellvalue+'</span></div>');
+                                    var cell = $('<div class="jsit_cell'+hiddenclass+'"'+addstyle+'><span style="font-size: '+this.options.cellfontsize+'">'+cellvalue+'</span></div>');
                                     row_element.append(cell);
 
                                     break;
@@ -501,140 +516,53 @@
         // End Create Data
 
         SortTableByColumn(n, caller) {
-            if(!$(caller).hasClass("dragging"))
+            if(this.options.sortable)
             {
-                this.listeners.BeforeSort();
-
-                var table = $(caller).parent().parent().parent();
-                var dir = "asc";
-                var dir_value = 1;
-
-                var icon_element = $(caller).children(".jsit_ordericon")[0];
-                if($(icon_element).html() == "keyboard_arrow_down")
+                if(!$(caller).hasClass("dragging"))
                 {
-                    dir = "desc";
-                } else {
-                    dir = "asc";
-                    dir_value = -1;
-                }
+                    this.listeners.BeforeSort();
 
-                if (dir == "asc") {
-                    $(icon_element).html("keyboard_arrow_down");
-                }  else if (dir == "desc") {
-                    $(icon_element).html("keyboard_arrow_up");
-                }
+                    var table = $(caller).parent().parent().parent();
+                    var dir = "asc";
+                    var dir_value = 1;
 
-                var id = $(caller).attr('id');
-                var column_param = id.replace("hd_","");
-
-                function compare( a, b ) {
-                    if ( a[column_param] < b[column_param] ){
-                      return -1 * dir_value;
+                    var icon_element = $(caller).children(".jsit_ordericon")[0];
+                    if($(icon_element).html() == "keyboard_arrow_down")
+                    {
+                        dir = "desc";
+                    } else {
+                        dir = "asc";
+                        dir_value = -1;
                     }
-                    if ( a[column_param] > b[column_param] ){
-                      return 1 * dir_value;
-                    }
-                    return 0;
-                }                
 
-                this.options.data.sort( compare );
-                this.Reload();
-
-                if(this.listeners.OnSort !== null && typeof this.listeners.OnSort !== 'undefined' && typeof this.listeners.OnSort === "function")
-                {
-                    this.listeners.OnSort();
-                }
-                
-
-                /*
-                var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-        
-                table = $(caller).parent().parent().parent();
-                switching = true;
-                dir = "asc";
-                
-                var all_icon_elements = table.children(".jsit_heading").children(".jsit_row")[0];
-                for(var g=0; g < $(all_icon_elements).children(".jsit_head").length; g++)
-                {
-                    var head = $(all_icon_elements).children(".jsit_head")[g];
-                    var head_icon_elemen = $(head).children(".jsit_ordericon")[0];
-                    $(head_icon_elemen).html("remove");
-                }
-        
-                var icon_element = $(caller).children(".jsit_ordericon")[0];
-            
-                while (switching) {
-                  switching = false;
-                  rows = $(table).find(".jsit_body").children(".jsit_row");
-            
-                  for (i = 0; i < (rows.length - 1); i++) {
-                    shouldSwitch = false;
-            
-                    x = $(rows[i]).children(".jsit_cell")[n];
-                    y = $(rows[i + 1]).children(".jsit_cell")[n];
-            
-                    x = $(x).children("span");
-                    y = $(y).children("span");
-            
                     if (dir == "asc") {
                         $(icon_element).html("keyboard_arrow_down");
-                        if($.isNumeric(  ) )
-                        {
-                            if (Number($(x).html()) > Number($(y).html())) {
-                                shouldSwitch = true;
-                                break;
-                            }
-                        } else {
-                            if($(x).html() != null && typeof $(x).html() != 'undefined')
-                            {
-                                if ($(x).html().toLowerCase() > $(y).html().toLowerCase()) {
-                                    shouldSwitch = true;
-                                    break;
-                                }
-                            }                    
-                        }              
-                    } else if (dir == "desc") {
+                    }  else if (dir == "desc") {
                         $(icon_element).html("keyboard_arrow_up");
-                        if($.isNumeric( $(x).html() ) )
-                        {
-                            if (Number($(x).html()) < Number($(y).html())) {
-                                shouldSwitch = true;
-                                break;
-                            }
-                        } else {
-                            if($(x).html() != null && typeof $(x).html() != 'undefined')
-                            {
-                                if ($(x).html().toLowerCase() < $(y).html().toLowerCase()) {
-                                    shouldSwitch = true;
-                                    break;
-                                }
-                            }                    
-                        }              
                     }
-                  }
-                  if (shouldSwitch) {
-                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                    switching = true;
-                    switchcount ++; 
-                  } else {
-                    if (switchcount == 0 && dir == "asc") {
-                      dir = "desc";
-                      switching = true;
+
+                    var id = $(caller).attr('id');
+                    var column_param = id.replace("hd_","");
+
+                    function compare( a, b ) {
+                        if ( a[column_param] < b[column_param] ){
+                        return -1 * dir_value;
+                        }
+                        if ( a[column_param] > b[column_param] ){
+                        return 1 * dir_value;
+                        }
+                        return 0;
+                    }                
+
+                    this.options.data.sort( compare );
+                    this.Reload();
+
+                    if(this.listeners.OnSort !== null && typeof this.listeners.OnSort !== 'undefined' && typeof this.listeners.OnSort === "function")
+                    {
+                        this.listeners.OnSort();
                     }
-                  }
-                }*/
-        
-                // Now remove all classes Odd or Even ad re add them
-                /* for(var t=0; t < rows.length; t++)
-                {
-                    $(rows[t]).removeClass("odd");
-                    $(rows[t]).removeClass("even");
-        
-                    var rowclass = "odd";
-                    if((t+1) % 2 == 0) rowclass = "even";
-                    $(rows[t]).addClass(rowclass);
-                } */
-            }            
+                } 
+            }                       
         },
         // ---
         // End SortTableByColumn
@@ -810,13 +738,13 @@
         var plugin = this.data(dataKey);
 
         // has plugin instantiated ?
-        if (plugin instanceof Plugin) {
+        if (plugin instanceof JSIronTable) {
             // if have options arguments, call plugin.init() again
             if (typeof options !== 'undefined') {
                 plugin.init(options);
             }
         } else {
-            plugin = new Plugin(this, options);
+            plugin = new JSIronTable(this, options);
             this.data(dataKey, plugin);
         }
         
