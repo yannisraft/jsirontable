@@ -26,9 +26,10 @@
         this.options = {
             data: [],
             fitHeight: false,
+            maxHeight: 0,
             fixedheader: true,
             scrollable: true,
-            sortable: true,
+            sortable: false,
             headerfontsize: "12pt",
             cellfontsize: "12pt",
             columns: [],
@@ -47,6 +48,28 @@
             var self = this;
             this.body = $('<div class="jsit_body"></div>');
             this.element.html(this.body);
+
+            // Enable or Disable the Max Height property
+            //
+            if(this.options.maxHeight !== null && typeof this.options.maxHeight !== 'undefined')
+            {
+                if(this.options.maxHeight !== 0)
+                {
+                    $(this.element).css("max-height", this.options.maxHeight);
+                }
+            }
+
+            // Make Table Scrollable if enabled ( Enabled by default )
+            if(this.options.scrollable !== null && typeof this.options.scrollable !== 'undefined')
+            {
+                if(this.options.scrollable === true)
+                {
+                    $(this.element).css("overflow-y", "auto");
+                } else {
+                    $(this.element).css("overflow-y", "hidden");
+                }
+            }
+            
 
             this.listeners = {};
             this.rows = [];

@@ -7,8 +7,9 @@ var options = {
     nodatatext: "No Entries here",
     nodata_datafields: [{key: "data-translate", value: "{{lang.main.title}}"}],
     debug: true, // Done
+    maxHeight: 300, // Done
     fixedheader: true,
-    scrollable: true,
+    scrollable: true, // Done
     fitHeight: true,
     sortable: true, // Done
     headerfontsize: "12pt", // Done

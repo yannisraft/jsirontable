@@ -229,5 +229,27 @@ var songs = [
         test: "30",     
         path:"http://api.audiotool.com/track/volution/play.mp3",
         actions:""
+    },
+    {
+		id: "s21",
+        artist:"Bryan Adams",
+        title:"Somebody",
+        isnew: 1,
+        duration:300,
+        bpm:65,   
+        test: "30",     
+        path:"http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
+    },
+    {
+		id: "s22",
+        artist:"Bryan Adams",
+        title:"Summer Of '69",
+        isnew: 0,
+        duration:300,
+        bpm:65,   
+        test: "30",     
+        path:"http://api.audiotool.com/track/volution/play.mp3",
+        actions:""
     }
 ];
