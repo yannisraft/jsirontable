@@ -116,11 +116,24 @@
         
                         // Create Header
                         //
-                        self.CreateHeader();
+                        try
+                        {
+                            self.CreateHeader();
+                        } catch(ex)
+                        {
+                            console.log("JSIronTable Error creating Header: "+ex);
+                        }
+                        
         
                         // Create Data
                         //
-                        self.CreateData();
+                        try
+                        {
+                            self.CreateData();
+                        } catch(ex)
+                        {
+                            console.log("JSIronTable Error creating Data: "+ex);
+                        }
         
                         self.initialHeight = self.element.height();
         
@@ -687,7 +700,7 @@
 
     var addDragEvent = function(cell, table)
     {
-        if(this.options.draggableColumns)
+        if(table.options.draggableColumns)
         {
             $( cell ).draggable(
             { 

@@ -63,22 +63,24 @@ irontable.BeforeSort(function()
 //console.log(irontable.GetRows());
 
 
-
+/*
 var SECOND_irontable = $('.second_jsirontable').JSIronTable(options);
 SECOND_irontable.OnInitialized(function()
 {
     
-});
+});*/
 
 
 setTimeout(function()
 {
-    SECOND_irontable.options.data = [];
-    SECOND_irontable.Reload();
+    /* SECOND_irontable.options.data = [];
+    SECOND_irontable.Reload(); */
+    //irontable.Reload();
+    console.log("Reload");
 }, 3000);
 
 
-console.log($('.jsirontable').JSIronTable());
+//console.log($('.jsirontable').JSIronTable());
 
 function ClickActionBtn(data)
 {    
