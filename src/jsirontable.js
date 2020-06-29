@@ -30,6 +30,7 @@
             fixedheader: true,
             scrollable: true,
             sortable: false,
+            draggableColumns: false,
             headerfontsize: "12pt",
             cellfontsize: "12pt",
             columns: [],
@@ -151,31 +152,47 @@
         OnInitialized(callback)
         {
             if(this.options.debug) console.log("JSIronTable -> OnInitialized()");
-            this.listeners.OnInitialized = callback;
+            if(this.listeners.OnError !== null && typeof this.listeners.OnError !== 'undefined')
+            {
+                this.listeners.OnInitialized = callback;
+            }            
         },
 
         OnError(callback)
         {
             if(this.options.debug) console.log("JSIronTable -> OnError()");
-            this.listeners.OnError = callback;
+            if(this.listeners.OnError !== null && typeof this.listeners.OnError !== 'undefined')
+            {
+                this.listeners.OnError = callback;
+            }            
         },
 
         OnSort(callback)
         {
             if(this.options.debug) console.log("JSIronTable -> OnSort()");
-            this.listeners.OnSort = callback;
+            if(this.listeners.OnSort !== null && typeof this.listeners.OnSort !== 'undefined')
+            {
+                this.listeners.OnSort = callback;
+            }
+            
         },
 
         BeforeSort(callback)
         {
             if(this.options.debug) console.log("JSIronTable -> BeforeSort()");
-            this.listeners.BeforeSort = callback;
+            if(this.listeners.BeforeSort !== null && typeof this.listeners.BeforeSort !== 'undefined')
+            {
+                this.listeners.BeforeSort = callback;
+            }            
         },
 
         OnReload(callback)
         {
             if(this.options.debug) console.log("JSIronTable -> OnReload()");
-            this.listeners.OnReload = callback;
+            if(this.listeners.OnReload !== null && typeof this.listeners.OnReload !== 'undefined')
+            {
+                this.listeners.OnReload = callback;
+            }            
         },
 
         Validate: function(variable)
@@ -197,6 +214,20 @@
             {
                 this.listeners.OnReload();
             }            
+        },
+
+        ReloadAll: function()
+        {
+            $(this.heading).html("");
+            this.CreateHeader();
+
+            $(this.body).html('');
+            this.CreateData();
+
+            if(this.listeners.OnReload !== null && typeof this.listeners.OnReload !== 'undefined' && typeof this.listeners.OnReload === "function")
+            {
+                this.listeners.OnReload();
+            }
         },
 
         StartLoader: function()
@@ -360,14 +391,19 @@
                     // Sort Icon
                     if(this.options.sortable)
                     {
-                        $(span).html($(span).html() + '<i class="material-icons jsit_ordericon">swap_vert</i>');
-
-                        // Add On click listener to the header for sorting
-                        //
-                        $(span).click(function(e) {
+                        $(span).html($(span).html() + '<i class="material-icons jsit_ordericon">unfold_more</i>');
+                        
+                        //$(span).click(function(e) {
+                        var icon = $(span).children('.jsit_ordericon')[0];
+                        //$(icon).click(function(e) {
+                        $(icon).on("click", function(e) {
                             var targ = e.target.id;
+                            console.log("targ: "+targ);
                             var lastChar = targ.charAt(targ.length - 1);
                             e.preventDefault();
+                            
+                            console.log("this.parentElement: ");
+                            console.log(this.parentElement);
                             self.SortTableByColumn(lastChar, this.parentElement);
                         });
                     }                                        
@@ -543,28 +579,46 @@
             {
                 if(!$(caller).hasClass("dragging"))
                 {
-                    this.listeners.BeforeSort();
+                    if(this.listeners.BeforeSort !== null && typeof this.listeners.BeforeSort !== 'undefined' && typeof this.listeners.BeforeSort === "function")
+                    {
+                        this.listeners.BeforeSort();
+                    }            
 
-                    var table = $(caller).parent().parent().parent();
+                    //var table = $(caller).parent().parent().parent();
                     var dir = "asc";
                     var dir_value = 1;
 
-                    var icon_element = $(caller).children(".jsit_ordericon")[0];
-                    if($(icon_element).html() == "keyboard_arrow_down")
+                    var icon_element = $(caller).children(".jsit_ordericon")[0];                    
+                    if($(icon_element).html() === "expand_more")
                     {
                         dir = "desc";
+                        dir_value = -1;
+                    
                     } else {
                         dir = "asc";
-                        dir_value = -1;
+                        dir_value = 1;
                     }
 
-                    if (dir == "asc") {
-                        $(icon_element).html("keyboard_arrow_down");
-                    }  else if (dir == "desc") {
-                        $(icon_element).html("keyboard_arrow_up");
+                    // Change all Icons to default
+                    if($(this.heading).children() !== null && typeof $(this.heading).children() !== 'undefined')
+                    {
+                        var child_heading = $(this.heading).children()[0];
+                        for(var f=0; f < $(child_heading).children().length; f++)
+                        {
+                            var child = $(child_heading).children()[f];
+                            var child_sortheader = $(child).children(".jsit_sortheader")[0];
+                            var child_icon_element = $(child_sortheader).children(".jsit_ordericon")[0];
+                            $(child_icon_element).html("unfold_more");
+                        }
                     }
 
-                    var id = $(caller).attr('id');
+                    if (dir === "asc") {
+                        $(icon_element).html("expand_more");
+                    }  else if (dir === "desc") {
+                        $(icon_element).html("expand_less");
+                    }
+
+                    var id = $(caller).parent().attr('id');
                     var column_param = id.replace("hd_","");
 
                     function compare( a, b ) {
@@ -575,7 +629,7 @@
                         return 1 * dir_value;
                         }
                         return 0;
-                    }                
+                    }
 
                     this.options.data.sort( compare );
                     this.Reload();
@@ -633,51 +687,93 @@
 
     var addDragEvent = function(cell, table)
     {
-        $( cell ).draggable(
-        { 
-            axis: "x",
-            containment: "parent",
-            start: function(ev,ui) {
-                this.ax = $(ev.target).position().left;
-            },
-            drag: function(ev,ui) {
-                $(ev.target).addClass("dragging");            
-            },
-            stop: function(ev,ui) {        
-                setTimeout(function()
-                {
-                    $(ev.target).removeClass("dragging");
-                }, 500);
-
-                var a_x = -1;
-                var a_index = -1;
-                var b_x = -1;
-                var b_index = -1;
-                
-                a_x = $(ev.target).position().left;
-                
-                var headercells = $(ev.target).parent().children(".jsit_head");
-                for(var j=0; j < headercells.length; j++)
-                {
-                    var currentheader = headercells[j];
-                    var currentheader_x = $(currentheader).position().left;
-                    var currentheader_w = $(currentheader).outerWidth();
-                    
-                    if((a_x >= currentheader_x) && a_x < (currentheader_x + currentheader_w) && $(ev.target).attr("id") != $(currentheader).attr('id'))
+        if(this.options.draggableColumns)
+        {
+            $( cell ).draggable(
+            { 
+                axis: "x",
+                containment: "parent",
+                start: function(ev,ui) {
+                    this.ax = $(ev.target).position().left;
+                },
+                drag: function(ev,ui) {
+                    $(ev.target).addClass("dragging");            
+                },
+                stop: function(ev,ui) {        
+                    setTimeout(function()
                     {
-                        var resulttable = ExchangeColumns($(ev.target).attr("id"), $(currentheader).attr('id'), table); 
-                        table = resulttable;
-                        break;
-                    }
-                }
+                        $(ev.target).removeClass("dragging");
+                    }, 500);
+    
+                    var a_x = -1;
+                    var a_index = -1;
+                    var b_x = -1;
+                    var b_index = -1;
+                    
+                    a_x = $(ev.target).position().left;
 
-                $(this).css({left: 0});
-            }
-        });
+                    console.log("Diff: "+Math.abs(a_x - this.ax));
+                    var move_diff = Math.abs(a_x - this.ax);
+
+                    if(move_diff > 40)
+                    {
+                        var headercells = $(ev.target).parent().children(".jsit_head");
+                        for(var j=0; j < headercells.length; j++)
+                        {
+                            var currentheader = headercells[j];
+                            var currentheader_x = $(currentheader).position().left;
+                            var currentheader_w = $(currentheader).outerWidth();
+                            
+                            if((a_x >= currentheader_x) && a_x < (currentheader_x + currentheader_w) && $(ev.target).attr("id") != $(currentheader).attr('id'))
+                            {
+                                var resulttable = ExchangeColumns($(ev.target).attr("id"), $(currentheader).attr('id'), table); 
+                                table = resulttable;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    
+    
+                    $(this).css({left: 0});
+                }
+            });
+        }
+        
 
         return table;
     };
+    
+    var ExchangeColumns = function(sourceColumnA, targetColumnB, table)
+    {
+        var a_index = -1;
+        var b_index = -1;
 
+        for(var j=0; j < table.options.columns.length; j++)
+        {
+            if("hd_"+table.options.columns[j].datafield == sourceColumnA)
+            {
+                a_index = j;
+            } else 
+            if("hd_"+table.options.columns[j].datafield == targetColumnB)
+            {
+                b_index = j;
+            }
+        }
+
+        /* console.log("a_index: "+a_index);
+        console.log("b_index: "+b_index);
+        console.log(table.options.columns); */
+
+        var temp_column = table.options.columns[a_index];
+        table.options.columns[a_index] = table.options.columns[b_index];
+        table.options.columns[b_index] = temp_column;
+
+        table.ReloadAll();
+
+        return table;
+    }
+/*
     var ExchangeColumns = function(sourceColumnA, targetColumnB, table)
     {
         console.log("ExchangeColumns");
@@ -729,6 +825,37 @@
             $(a_html).replaceWith(temp_b);    
             $(b_html).replaceWith(temp_a);
 
+            // Add Listener for B
+            var sortheader_b = $(temp_b).children('.jsit_sortheader');            
+            if(sortheader_b !== null && typeof sortheader_b !== 'undefined')
+            {                
+                var icon_b = $(sortheader_b[0]).children('.jsit_ordericon')[0];
+                $(icon_b).on('click', function(e) {
+                    var targ = e.target.id;
+                    var lastChar_b = targ.charAt(targ.length - 1);
+                    console.log("this.parentElement: ");
+                    console.log(this.parentElement);
+                    e.preventDefault();                    
+                    table.SortTableByColumn(lastChar_b, this.parentElement);
+                });
+            }
+
+            // Add Listener for A
+            var sortheader_a = $(temp_a).children('.jsit_sortheader');            
+            if(sortheader_a !== null && typeof sortheader_a !== 'undefined')
+            {                
+                var icon_a = $(sortheader_a[0]).children('.jsit_ordericon')[0];
+                $(icon_a).on('click', function(e) {
+                    var targ = e.target.id;
+                    var lastChar = targ.charAt(targ.length - 1);
+                    console.log("this.parentElement: ");
+                    console.log(this.parentElement);
+                    e.preventDefault();                    
+                    table.SortTableByColumn(lastChar, this.parentElement);
+                });
+            }
+            
+
             table = addDragEvent($(temp_a), table);
             table = addDragEvent($(temp_b), table);
 
@@ -743,11 +870,11 @@
 
                 $(cell_a).replaceWith(temp_content_b);    
                 $(cell_b).replaceWith(temp_content_a);         
-            }        
+            }
         }    
 
         return table;
-    }
+    }*/
 
     var GetScrollBarWidth = function() {
         var $outer = $('<div>').css({visibility: 'hidden', width: 100, overflow: 'scroll'}).appendTo('body'),

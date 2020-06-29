@@ -12,6 +12,7 @@ var options = {
     scrollable: true, // Done
     fitHeight: true,
     sortable: true, // Done
+    draggableColumns: true,
     headerfontsize: "12pt", // Done
     cellfontsize: "12pt", // Done
     columns: [
