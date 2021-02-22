@@ -34,7 +34,7 @@ var options = {
     ]
 };
 
-var irontable = $('.jsirontable').JSIronTable(options);
+var irontable = $('#jsirontable').JSIronTable(options);
 irontable.OnInitialized(function()
 {
     
@@ -99,3 +99,41 @@ function ClickActionBtn(data)
 
     irontable.RemoveRow(row);
 }
+
+var options2d = {    
+    data: songs,
+    nodatatext: "No Entries here",
+    nodata_datafields: [{key: "data-translate", value: "{{lang.main.title}}"}],
+    scrollable: true,
+    fitHeight: true,
+    fixedheader: true,
+    sortable: false,
+    draggableColumns: false,
+    headerfontsize: "8pt",
+    cellfontsize: "8pt",
+    rowPerUniqueValue: {
+        datafield: "bpm", 
+        sortCompare: function (a,b) { return b-a; } // numeric reverse sort
+    },
+    columns: [
+        { 
+            title: "BPM",
+            datafield: "bpm",
+            visible: true,
+        },        
+        { 
+            fromUniqueValues: {
+                datafield: "artist", 
+                sortCompare: function(a,b) { return a.localeCompare(b);} // alpha sort
+            },
+            view: function ( data ) { 
+                return  1;
+            },
+            combineValues: function ( dataList ) {
+                return dataList.length
+            }
+        }
+    ]
+};
+
+var irontable2 = $('#jsirontable2').JSIronTable(options2d);
