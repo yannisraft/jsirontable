@@ -1,4 +1,11 @@
 # JSIronTable Change Log
+
+## Version 0.6.1
+
+- Added 2D table support thanks to Kolossi contribution
+- Fixed bugs on Listeners not get called
+- Updated Readme page with new example
+
 ## Version 0.5
 
 - Added Debug Logging option

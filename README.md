@@ -7,6 +7,7 @@ This table provides a responsive JQuery table which includes:
 - Dynamic data
 - Custom column view
 - Column Rearrange
+- 2D Support for auto rows and columns generation
 
 An example of use is described on the example.js file
 
@@ -105,6 +106,49 @@ jsirontable.OnSort(function() {
 
 jsirontable.BeforeSort(function() {
 });
+
+```
+
+An 2D example to create columns and rows from the data itself with a unique BPM for each artist
+
+```javascript
+
+var {    
+    data: songs,
+    nodatatext: "No Entries here",
+    nodata_datafields: [{key: "data-translate", value: "{{lang.main.title}}"}],
+    scrollable: true,
+    fitHeight: true,
+    fixedheader: true,
+    sortable: false,
+    draggableColumns: false,
+    headerfontsize: "8pt",
+    cellfontsize: "8pt",
+    rowPerUniqueValue: {
+        datafield: "bpm", 
+        sortCompare: function (a,b) { return b-a; } // numeric reverse sort
+    },
+    columns: [
+        { 
+            title: "BPM",
+            datafield: "bpm",
+            visible: true,
+        },        
+        { 
+            fromUniqueValues: {
+                datafield: "artist", 
+                sortCompare: function(a,b) { return a.localeCompare(b);} // alpha sort
+            },
+            view: function ( data ) { 
+                return  1;
+            },
+            combineValues: function ( dataList ) {
+                return dataList.length
+            }
+        }
+    ]
+};
+$('.jsirontable').JSIronTable(options);
 
 ```
 
