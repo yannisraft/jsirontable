@@ -60,44 +60,36 @@ irontable.BeforeSort(function()
     
 });
 
-//console.log(irontable.GetRows());
-
-
-/*
-var SECOND_irontable = $('.second_jsirontable').JSIronTable(options);
-SECOND_irontable.OnInitialized(function()
-{
-    
-});*/
-
-
+// TEST Reload
 setTimeout(function()
 {
-    /* SECOND_irontable.options.data = [];
-    SECOND_irontable.Reload(); */
-    //irontable.Reload();
     console.log("Reload");
 }, 3000);
 
 
-//console.log($('.jsirontable').JSIronTable());
-
+// TEST ClickActionBtn
 function ClickActionBtn(data)
 {    
     var row = irontable.GetRow(function(e)
     {    
         var found = null;
-        if(e.data.id === data)
-        {
-            found = e;
+        if(e.data[0].id === data)
+        {            
+            found = e.data[0];
         }
+
         return found;
     });
 
-    $(row.element).css({"background-color": "yellow"});
-    $(row.element).addClass("disabled");
+    if(row !== null && typeof row !== 'undefined')
+    {
+        $(row.element).css({"background-color": "yellow"});
+        $(row.element).addClass("disabled");
 
-    irontable.RemoveRow(row);
+        irontable.RemoveRow(row);    
+    } else {
+        console.log('Error: No row was found, row is undefined');
+    }
 }
 
 var options2d = {    

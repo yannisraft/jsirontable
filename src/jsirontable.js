@@ -343,7 +343,7 @@
             var entry = null;
             for(var k=0; k < arr.length; k++)
             {
-                if(arr[k] == row.data)
+                if(arr[k] == row.data[0])
                 {
                     entry = k;
                     break;
